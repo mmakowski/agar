@@ -1,0 +1,4 @@
+tar -cjf "Akkerman, Jan - 1972 - Profile.tar.gz" -C /vault/multimedia/music "Akkerman, Jan - 1972 - Profile"
+gpg --symmetric --cipher-algo AES256 Akkerman\,\ Jan\ -\ 1972\ -\ Profile.tar.bz2
+aws configure
+aws glacier create-vault --account-id - --vault-name mm-personal-backup
