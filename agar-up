@@ -1,0 +1,42 @@
+#!/bin/bash
+
+set -ex
+
+function find_timestamp() {
+  src_dir=$1
+
+  rm -f tmp_ts
+  oldifs=$IFS
+  IFS=$'\n'
+  for f in `find "$src_dir"`; do
+    stat "$f" | grep Modify | cut -d ' ' -f 2- >> tmp_ts
+  done;
+  IFS=$oldifs
+
+  ts=`sort -u tmp_ts | tail -n 1`
+  rm tmp_ts
+  
+  echo $ts
+}
+
+VAULT=mm-personal-backup
+ACCOUNT=-
+FORMAT=tar.bz2.gpg
+
+src_dir=$1
+category=$2
+reminder=$3
+
+base_dir=`dirname "$src_dir"`
+item_name=`basename "$src_dir"`
+
+bz2_file_name=${item_name}.tar.bz2
+tar -cjf "$bz2_file_name" -C "$base_dir" "$item_name"
+
+gpg_file_name=${bz2_file_name}.gpg
+gpg -o "$gpg_file_name" --symmetric --cipher-algo AES256 "$bz2_file_name"
+
+timestamp=`find_timestamp "$src_dir"`
+description="$category/$item_name/$timestamp/$FORMAT/$reminder"
+
+aws glacier upload-archive --account-id $ACCOUNT --vault $VAULT --archive-description "$description" --body "$gpg_file_name"

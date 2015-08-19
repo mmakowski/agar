@@ -2,7 +2,7 @@ tar -cjf "Akkerman, Jan - 1972 - Profile.tar.bz2" -C /vault/multimedia/music "Ak
 gpg --symmetric --cipher-algo AES256 Akkerman\,\ Jan\ -\ 1972\ -\ Profile.tar.bz2
 aws configure
 aws glacier create-vault --account-id - --vault-name mm-personal-backup
-time aws glacier upload-archive --account-id - --vault mm-personal-backup --archive-description "music/Akkerman, Jan - 1972 - Profile/2015-08-16 18:07:25.100000001 +0100" --body "Akkerman, Jan - 1972 - Profile-ttwids.tar.gz2.gpg"
+time aws glacier upload-archive --account-id - --vault mm-personal-backup --archive-description "music/Akkerman, Jan - 1972 - Profile/2015-08-16 18:07:25.100000001 +0100/tar.bz2.gpg/ttwids" --body "Akkerman, Jan - 1972 - Profile-ttwids.tar.bz2.gpg"
 // note: there is no tool on linux that calcs the SHA256 tree hash as specified by Amazon: http://docs.aws.amazon.com/amazonglacier/latest/dev/checksum-calculations.html
 
 index entry:
@@ -16,3 +16,9 @@ aws glacier describe-job --account-id - --vault-name mm-personal-backup --job-id
 Once succeeded:
 
 aws glacier get-job-output --account-id - --vault-name mm-personal-backup --job-id 1DUFvGQ3RjDYuS3ElFJgx653jye8KrsWDbJ_VQSxnpSL4Zz-a063KUcJ1ZhV2ogFpgp6XZiP6PkNHDp7c95jg6ia7Ktg index-downloaded
+
+aws glacier initiate-job --account-id - --vault-name mm-personal-backup --job-parameters '{"Type": "archive-retrieval", "ArchiveId": "nAf0hZyIeyZPBr-L4PTh4-jcghBEp4XRyACCI6hQMzpcmyTnEgttIGZosGByXCWgQTOpTLRZS5PH2UJ_Hdb4B1TSemvjq8WhxcHwzgJ5dG2cV8VuAEUx0yvUTMuM2b14UF5yTZx9nw"}'
+
+-- might not work unless the retrieval policy is extended above free tier
+
+aws glacier get-job-output --account-id - --vault-name mm-personal-backup --job-id ... akkerman.tar.bz2.gpg
