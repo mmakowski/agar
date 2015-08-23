@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -e
+
+LIB_DIR=.
+AGAR_DIR=$HOME/.agar
+INDEX_FILE=$AGAR_DIR/index
+
+function cmd_up() {
+  "$LIB_DIR/agar-up" "$1" "$2" "$3" >> "$INDEX_FILE"
+}
+
+command=$1
+shift
+
+case $command in
+  up)
+    cmd_up "$1" "$2" "$3"
+    ;;
+  *)
+    echo "usage: $0 up"
+    exit 1
+esac
