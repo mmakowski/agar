@@ -39,9 +39,10 @@ rm "$bz2_file_name"
 
 timestamp=`find_timestamp "$src_dir"`
 description="$category/$item_name/$timestamp/$FORMAT/$reminder"
+file_size=`ls -l "$gpg_file_name" | cut -d ' ' -f 5`
 
 output=`aws glacier upload-archive --account-id $ACCOUNT --vault $VAULT --archive-description "$description" --body "$gpg_file_name"`
 rm "$gpg_file_name"
 
 archive_id=`echo "$output" | grep archiveId | cut -d '"' -f 4`
-echo "$category $item_name  $timestamp $FORMAT  $reminder $archive_id"
+echo "$category	$item_name	$timestamp	$FORMAT	$file_size	$reminder	$archive_id"
