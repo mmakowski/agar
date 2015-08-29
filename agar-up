@@ -19,7 +19,9 @@ function find_timestamp() {
   echo $ts
 }
 
+AGAR_DIR=$HOME/.agar
 VAULT=mm-personal-backup
+CIPHER=AES256
 ACCOUNT=-
 FORMAT=tar.bz2.gpg
 
@@ -34,7 +36,12 @@ bz2_file_name=${item_name}.tar.bz2
 tar -cjf "$bz2_file_name" -C "$base_dir" "$item_name"
 
 gpg_file_name=${bz2_file_name}.gpg
-gpg -o "$gpg_file_name" --symmetric --cipher-algo AES256 "$bz2_file_name"
+password_file=$AGAR_DIR/$reminder
+if [ -f "$password_file" ]; then
+  cat "$password_file" | gpg --batch -q --passphrase-fd 0 -o "$gpg_file_name" --symmetric --cipher-algo $CIPHER "$bz2_file_name"
+else
+  gpg -o "$gpg_file_name" --symmetric --cipher-algo $CIPHER "$bz2_file_name"
+fi;
 rm "$bz2_file_name"
 
 timestamp=`find_timestamp "$src_dir"`
