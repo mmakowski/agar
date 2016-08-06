@@ -30,3 +30,5 @@ aws glacier get-job-output --account-id - --vault-name mm-personal-backup --job-
     "location": "/876401630223/vaults/mm-personal-backup/archives/SSVds7SSvNERmcQfdAzyaXUuCf3lvYYXc0w4RcEJq4E5bSdPYWF6W6vR_p6T5dsfp189nNbNnEFKkh_239XiQjcZnl_2VRfJRmGcK3FQFufwnMcld2eWVsY3plU32-BSGxRfw8LACw",
     "checksum": "27176c744c32a3cdf7e1a781be787a56f470c259c6279a1248967526f7e3da95"
 }
+
+TODO: multipart upload; there appears to be a limit of 4GB per file. See http://docs.aws.amazon.com/cli/latest/userguide/cli-using-glacier.html#cli-using-glacier-prep for instructions on uploading in parts.
