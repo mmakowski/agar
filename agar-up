@@ -1,6 +1,10 @@
 #!/bin/bash
 
-set -e
+set -eu -o pipefail
+readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+readonly LIB_DIR=${SCRIPT_DIR}
+. ${LIB_DIR}/common
+. ${LIB_DIR}/settings
 
 function find_timestamp() {
   src_dir=$1
@@ -19,10 +23,6 @@ function find_timestamp() {
   echo $ts
 }
 
-AGAR_DIR=$HOME/.agar
-VAULT=mm-personal-backup
-CIPHER=AES256
-ACCOUNT=-
 FORMAT=tar.bz2.gpg
 
 src_dir=$1

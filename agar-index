@@ -1,0 +1,63 @@
+#!/bin/bash
+
+set -eu -o pipefail
+
+readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+readonly LIB_DIR=${SCRIPT_DIR}
+. ${LIB_DIR}/common
+. ${LIB_DIR}/settings
+
+readonly JOB_ID_FILE="${AGAR_DIR}/index-job-id"
+
+function cmd_start() {
+    local -r job_id=`aws glacier initiate-job --account-id ${ACCOUT} --vault-name ${VAULT} --job-parameters '{"Type": "inventory-retrieval"}' | grep jobId | cut -d: -f2 | tr -d ' ",'`
+    echo "${job_id}" > "${JOB_ID_FILE}"
+    echo "index retrieval started with job id ${job_id}"
+}
+
+function cmd_get() {
+    if [ ! -f "${JOB_ID_FILE}" ]; then
+        echo "no index retrieval job is active"
+        exit 1
+    fi
+    local -r job_id=`cat "${JOB_ID_FILE}"`
+    local -r job_status=`aws glacier describe-job --account-id ${ACCOUNT} --vault-name ${VAULT} --job-id ${job_id} --query StatusCode --output text`
+    case ${job_status} in
+        InProgress)
+            echo "the job is still running"
+            exit 0
+            ;;
+        *)
+            echo "TODO: ${job_status}"
+            ;;
+    esac
+}
+
+function show_usage() {
+    echo "usage: $0 <command>"
+    echo
+    echo "commands:"
+    echo "  start"
+    echo "  get"
+}
+
+if [ $# == 0 ]; then
+  show_usage
+  exit 1
+fi
+
+readonly command=$1
+shift
+
+case ${command} in
+  start)
+    cmd_start $@
+    ;;
+  get)
+    cmd_get $@
+    ;;
+  *)
+    show_usage
+    exit 1
+esac
+

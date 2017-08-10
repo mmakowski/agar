@@ -1,0 +1,5 @@
+readonly AGAR_DIR=${HOME}/.agar
+readonly INDEX_FILE=${AGAR_DIR}/index
+
+readonly ACCOUNT=-
+readonly CIPHER=AES256
