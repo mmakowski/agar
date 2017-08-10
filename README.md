@@ -19,16 +19,30 @@ Setup
 * install [aws-cli](https://aws.amazon.com/cli/)
 * configure aws-cli: 
 
-    aws configure
+~~~
+aws configure
+~~~
 
 * create a Glacier vault for your backups: 
 
-    aws glacier create-vault --account-id - --vault-name my-backup
+~~~
+aws glacier create-vault --account-id - --vault-name my-backup
+~~~
 
-* TODO: create ~/.agar/agar.conf
+* create `~/.agar/agar.conf` with the following content:
+
+~~~
+VAULT=my-backup
+~~~
 
 Usage
 -----
 
-    agar up <directory> <category> <password reminder>
+~~~
+agar up <directory> <category> <password reminder>
+~~~
 
+License
+-------
+
+MIT

@@ -4,23 +4,15 @@ set -eu -o pipefail
 
 readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 readonly LIB_DIR=${SCRIPT_DIR}
-. ${LIB_DIR}/common
-. ${LIB_DIR}/settings
+. "${LIB_DIR}/common"
+. "${CONFIG_FILE}"
 
-
-function ensure_config_dir_exists() {
-  if [ ! -d "${AGAR_DIR}" ]; then
-    mkdir "${AGAR_DIR}"
-  fi
-}
 
 function cmd_up() {
-  ensure_config_dir_exists
   "${LIB_DIR}/agar-up" $@ >> "${INDEX_FILE}"
 }
 
 function cmd_index() {
-  ensure_config_dir_exists
   "${LIB_DIR}/agar-index" $@
 }
 

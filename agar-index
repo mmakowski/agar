@@ -4,8 +4,8 @@ set -eu -o pipefail
 
 readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 readonly LIB_DIR=${SCRIPT_DIR}
-. ${LIB_DIR}/common
-. ${LIB_DIR}/settings
+. "${LIB_DIR}/common"
+. "${CONFIG_FILE}"
 
 readonly JOB_ID_FILE="${AGAR_DIR}/index-job-id"
 

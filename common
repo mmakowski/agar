@@ -3,3 +3,4 @@ readonly INDEX_FILE=${AGAR_DIR}/index
 
 readonly ACCOUNT=-
 readonly CIPHER=AES256
+readonly CONFIG_FILE=${AGAR_DIR}/agar.conf
