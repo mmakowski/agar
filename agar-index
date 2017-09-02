@@ -10,7 +10,7 @@ readonly LIB_DIR=${SCRIPT_DIR}
 readonly JOB_ID_FILE="${AGAR_DIR}/index-job-id"
 
 function cmd_start() {
-    local -r job_id=`aws glacier initiate-job --account-id ${ACCOUT} --vault-name ${VAULT} --job-parameters '{"Type": "inventory-retrieval"}' | grep jobId | cut -d: -f2 | tr -d ' ",'`
+    local -r job_id=`aws glacier initiate-job --account-id ${ACCOUNT} --vault-name ${VAULT} --job-parameters '{"Type": "inventory-retrieval"}' | grep jobId | cut -d: -f2 | tr -d ' ",'`
     echo "${job_id}" > "${JOB_ID_FILE}"
     echo "index retrieval started with job id ${job_id}"
 }

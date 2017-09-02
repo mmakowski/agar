@@ -9,11 +9,11 @@ readonly LIB_DIR=${SCRIPT_DIR}
 
 
 function cmd_up() {
-  "${LIB_DIR}/agar-up" $@ >> "${INDEX_FILE}"
+  "${LIB_DIR}/agar-up" "$@" >> "${INDEX_FILE}"
 }
 
 function cmd_index() {
-  "${LIB_DIR}/agar-index" $@
+  "${LIB_DIR}/agar-index" "$@"
 }
 
 function show_usage() {
@@ -34,10 +34,10 @@ shift
 
 case ${command} in
   index)
-    cmd_index $@
+    cmd_index "$@"
     ;;
   up)
-    cmd_up $@
+    cmd_up "$@"
     ;;
   *)
     show_usage
