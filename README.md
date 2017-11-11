@@ -65,4 +65,4 @@ agar index get
 License
 -------
 
-MIT
+Apache License 2.0
