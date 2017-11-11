@@ -11,8 +11,8 @@ readonly JOB_ID_FILE="${AGAR_DIR}/index-job-id"
 
 function retrieve_and_setup() {
     aws glacier get-job-output --account-id ${ACCOUNT} --vault-name ${VAULT} --job-id `cat ${JOB_ID_FILE}` ${AGAR_DIR}/index.json > /dev/null
-    echo TODO: transform to tsv
-    echo TODO: remove job id file and index.json
+    python agar_index_transform.py ${AGAR_DIR}/index.json ${AGAR_DIR}/index
+    rm ${JOB_ID_FILE} ${AGAR_DIR}/index.json
 }
 
 function cmd_start() {
@@ -36,7 +36,6 @@ function cmd_get() {
         Succeeded)
             retrieve_and_setup
             ;;
-        # TODO: handle expired job
         *)
             echo "unsupported job status: ${job_status}"
             ;;

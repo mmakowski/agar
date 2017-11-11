@@ -10,7 +10,7 @@ Agar (Amazon Glacier Archiver) is a set of utilities for backup and archival on
 System Requirements
 -------------------
 
-Agar has only been tested on Linux.
+Agar has only been tested on Linux. Bash and Python are required.
 
 Setup
 -----
@@ -38,9 +38,29 @@ VAULT=my-backup
 Usage
 -----
 
+### Upload an archive
+
 ~~~
 agar up <directory> <category> <password reminder>
 ~~~
+
+If a file named `~/.agar/<password reminder>` exists then its contents will 
+be used as the password and no password prompt will be issued.
+
+### Retrieve index
+
+To start the job:
+
+~~~
+agar index start
+~~~
+
+To check job status and retrieve the index if the job completed:
+
+~~~
+agar index get
+~~~
+
 
 License
 -------

@@ -10,6 +10,14 @@ index entry:
 music Akkerman, Jan - 1972 - Profile  2015-08-16 18:07:25.100000001 +0100 nAf0hZyIeyZPBr-L4PTh4-jcghBEp4XRyACCI6hQMzpcmyTnEgttIGZosGByXCWgQTOpTLRZS5PH2UJ_Hdb4B1TSemvjq8WhxcHwzgJ5dG2cV8VuAEUx0yvUTMuM2b14UF5yTZx9nw
 
 aws glacier initiate-job --account-id - --vault-name my-vault --job-parameters '{"Type": "inventory-retrieval"}'
+
+output:
+{
+    "jobId": "PqrOczcuhQvNhtXrvo4vIS_-Nty2_G1IR-hYiojvxpedWolt1dNbA-soHybUpujPRn7XOYiXpvKbVcCw4uy7y1WxhgNw",
+    "location": "/876401630223/vaults/mm-personal-backup/jobs/PqrOczcuhQvNhtXrvo4vIS_-Nty2_G1IR-hYiojvxpedWolt1dNbA-soHybUpujPRn7XOYiXpvKbVcCw4uy7y1WxhgNw"
+}
+
+
 aws glacier list-jobs --account-id - --vault-name mm-personal-backup
 aws glacier describe-job --account-id - --vault-name mm-personal-backup --job-id 1DUFvGQ3RjDYuS3ElFJgx653jye8KrsWDbJ_VQSxnpSL4Zz-a063KUcJ1ZhV2ogFpgp6XZiP6PkNHDp7c95jg6ia7Ktg
 
