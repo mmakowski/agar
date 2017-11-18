@@ -16,12 +16,13 @@ def _main(json_file_path, tsv_file_path):
                 print("unable to parse archive description '%s', skipping" %
                       archive['ArchiveDescription'])
                 continue
-            tsv_file.write("%s\t%s\t%s\t%s\t%s\t%s\n" % (category,
+            tsv_file.write("%s\t%s\t%s\t%s\t%s\t%s\t%s\n" % (category,
                                                          name,
                                                          timestamp,
                                                          archive_format,
                                                          archive['Size'],
-                                                         password_reminder))
+                                                         password_reminder,
+                                                         archive['ArchiveId']))
 
 
 if __name__ == '__main__':
