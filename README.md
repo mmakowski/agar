@@ -47,6 +47,15 @@ agar up <directory> <category> <password reminder>
 If a file named `~/.agar/<password reminder>` exists then its contents will 
 be used as the password and no password prompt will be issued.
 
+### Check archival status of files/directories
+
+To list the items in a given directory that need to be archived because they
+either do not exist in the archive or have been updated since the last archival:
+
+~~~
+agar status <directory>
+~~~
+
 ### Retrieve index
 
 To start the job:

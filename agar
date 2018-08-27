@@ -8,12 +8,16 @@ readonly LIB_DIR=${SCRIPT_DIR}
 . "${CONFIG_FILE}"
 
 
-function cmd_up() {
-  "${LIB_DIR}/agar-up" "$@" >> "${INDEX_FILE}"
-}
-
 function cmd_index() {
   "${LIB_DIR}/agar-index" "$@"
+}
+
+function cmd_status() {
+  "${LIB_DIR}/agar-status" "$@"
+}
+
+function cmd_up() {
+  "${LIB_DIR}/agar-up" "$@" >> "${INDEX_FILE}"
 }
 
 function show_usage() {
@@ -21,6 +25,7 @@ function show_usage() {
     echo
     echo "commands:"
     echo "  up <source-directory> <category> <password-reminder>"
+    echo "  status <source-directory>"
     echo "  index <sub-command>"
 }
 
@@ -35,6 +40,9 @@ shift
 case ${command} in
   index)
     cmd_index "$@"
+    ;;
+  status)
+    cmd_status "$@"
     ;;
   up)
     cmd_up "$@"

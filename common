@@ -4,3 +4,21 @@ readonly INDEX_FILE=${AGAR_DIR}/index
 readonly ACCOUNT=-
 readonly CIPHER=AES256
 readonly CONFIG_FILE=${AGAR_DIR}/agar.conf
+
+# find the last modification timestamp of files in the specified directory
+function find_timestamp() {
+  src_dir="$1"
+
+  rm -f tmp_ts
+  oldifs=$IFS
+  IFS=$'\n'
+  for f in `find "$src_dir"`; do
+    stat "$f" | grep Modify | cut -d ' ' -f 2- >> tmp_ts
+  done;
+  IFS=$oldifs
+
+  ts=`sort -u tmp_ts | tail -n 1`
+  rm tmp_ts
+  
+  echo $ts
+}

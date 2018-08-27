@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -eu -o pipefail
+readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+readonly LIB_DIR=${SCRIPT_DIR}
+. "${LIB_DIR}/common"
+. "${CONFIG_FILE}"
+
+
+function make_timestamp_list() {
+  local -r scr_dir="${1}"
+  oldifs=${IFS}
+  IFS=$'\n'
+  for d in `find "${src_dir}" -mindepth 1 -maxdepth 1 -type d | sort`; do
+    local item_name=`basename "${d}"`
+    local timestamp=`find_timestamp "${d}"`
+    echo "${item_name}	${timestamp}"
+  done;
+  IFS=${oldifs}
+}
+
+src_dir="$1"
+readonly TMP_STATUS_FILE=tmp_status_tss
+
+make_timestamp_list "${src_dir}" > ${TMP_STATUS_FILE}
+python agar_status_reconcile.py ${INDEX_FILE} ${TMP_STATUS_FILE}
+rm ${TMP_STATUS_FILE}

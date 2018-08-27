@@ -6,23 +6,6 @@ readonly LIB_DIR=${SCRIPT_DIR}
 . "${LIB_DIR}/common"
 . "${CONFIG_FILE}"
 
-function find_timestamp() {
-  src_dir="$1"
-
-  rm -f tmp_ts
-  oldifs=$IFS
-  IFS=$'\n'
-  for f in `find "$src_dir"`; do
-    stat "$f" | grep Modify | cut -d ' ' -f 2- >> tmp_ts
-  done;
-  IFS=$oldifs
-
-  ts=`sort -u tmp_ts | tail -n 1`
-  rm tmp_ts
-  
-  echo $ts
-}
-
 FORMAT=tar.bz2.gpg
 
 src_dir="$1"
