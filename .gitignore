@@ -1,2 +1,6 @@
 scratch/
 .vscode/
+*.code-workspace
+
+/target
+**/*.rs.bk

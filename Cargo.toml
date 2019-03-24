@@ -1,0 +1,10 @@
+[package]
+name = "agar"
+version = "0.1.0"
+authors = ["Maciek Makowski <public@mmakowski.com>"]
+edition = "2018"
+
+[dependencies]
+futures = "0.1.25"
+rusoto_core = "0.37.0"
+rusoto_glacier = "0.37.0"
