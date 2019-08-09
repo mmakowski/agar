@@ -1,4 +1,5 @@
 scratch/
+.idea/
 .vscode/
 *.code-workspace
 
