@@ -26,7 +26,8 @@ pub fn run_command(args: &ArgMatches) {
     println!("dir: {:?}", args.value_of("DIRECTORY"));
     
     let archive_file = archive::archive(PathBuf::from(args.value_of("DIRECTORY").expect("directory not specified")).as_path(),
-                                        PathBuf::from(".").as_path())
+                                        PathBuf::from(".").as_path(),
+                                        "dupa") // FIXME: passphrase
                                 .expect("archiving failed");
 
     // TODO: make sure config is initialised in ~/.aws
