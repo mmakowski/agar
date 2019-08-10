@@ -96,11 +96,11 @@ fn decrypt(src_file: &Path, dest_dir: &Path, passphrase: &str) -> Result<PathBuf
     let dest_file = dest_dir.join(src_file.file_stem().expect("unable to get file stem"));
     let output = Command::new("gpg")
         .args(&["--batch",
-            "--decrypt",
-            "--passphrase", passphrase,
-            "-o", path_to_str(&dest_file),
-            "--cipher-algo", CIPHER,
-            path_to_str(src_file)])
+                "--decrypt",
+                "--passphrase", passphrase,
+                "-o", path_to_str(&dest_file),
+                "--cipher-algo", CIPHER,
+                path_to_str(src_file)])
         .output()?;
     assert!(output.status.success());
     assert!(dest_file.is_file());
@@ -133,12 +133,12 @@ mod tests {
         let dest_dir = test_dir.path().join("dest-dir");
         fs::create_dir(&dest_dir)?;
 
-        let archive_file = archive(src_dir.as_path(), dest_dir.as_path(), test_passphrase)?;
+        let archive_file = archive(&src_dir, &dest_dir, test_passphrase)?;
 
         // check that archive can be unpacked and has the expected contents
         let unpack_dir = test_dir.path().join("unpack-dir");
         fs::create_dir(&unpack_dir)?;
-        let unarchived_dir = unarchive(archive_file.as_path(), unpack_dir.as_path(), test_passphrase)?;
+        let unarchived_dir = unarchive(&archive_file, &unpack_dir, test_passphrase)?;
         assert_eq!(unarchived_dir, unpack_dir.join(src_dir_name));
         let expected_unpacked_file = unarchived_dir.join(src_file_name);
         assert!(expected_unpacked_file.is_file());
