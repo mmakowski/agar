@@ -84,6 +84,10 @@ To check job status and retrieve the index if the job completed:
 agar index get
 ~~~
 
+### Stored passwords
+
+In order to not have to type in the encryption/decryption password, you can pick a password reminder; for instance, if the password is [`correct horse battery staple`](https://xkcd.com/936/), you can use `xkcd-936` as a reminder. You can then store this password in a file called `~/.agar/xkcd-936`, and if `xkcd-936` is specified as the password reminder when uploading, Agar will use the contents of that file as the password. Similarly, when downloading, Agar will look up the password reminder in the index file and will use the contents of a corresponding password file (if present) as the password when decrypting the archive.
+
 
 License
 -------
