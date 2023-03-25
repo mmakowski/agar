@@ -22,3 +22,17 @@ function find_timestamp() {
   
   echo $ts
 }
+
+# invoke gpg with password from a file, if exists; otherwise prompt for the password
+# gpg_with_password <password-reminder> <gpg-args ...>
+function gpg_with_password() {
+  local reminder="$1"
+  shift
+  local password_file="${AGAR_DIR}/${reminder}"
+  if [ -f "${password_file}" ]; then
+    cat "${password_file}" | gpg --batch -q --passphrase-fd 0 --cipher-algo "${CIPHER}" $@
+  else
+    gpg --cipher-algo "${CIPHER}" $@
+  fi
+}
+

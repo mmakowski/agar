@@ -1,0 +1,92 @@
+#!/bin/bash
+
+set -eu -o pipefail
+
+readonly SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+readonly LIB_DIR=${SCRIPT_DIR}
+. "${LIB_DIR}/common"
+. "${CONFIG_FILE}"
+
+readonly JOB_IDS_FILE="${AGAR_DIR}/down-job-ids"
+
+function retrieve_and_unarchive() {
+    local -r archive_id=$1
+    local -r job_id=$2
+    local -r password_reminder=$(grep "${archive_id}" "${INDEX_FILE}" | cut -f6)
+    local -r bz2_file="${AGAR_DIR}/${job_id}.tar.bz2"
+    local -r gpg_file="${bz2_file}.gpg"
+    aws glacier get-job-output --account-id ${ACCOUNT} --vault-name ${VAULT} --job-id "${job_id}" "${gpg_file}" > /dev/null
+    gpg_with_password "${password_reminder}" --decrypt -o "${bz2_file}" "${gpg_file}"
+    tar -xf "${bz2_file}"
+}
+
+function cmd_start() {
+    local -r archive_ids="$@"
+    rm -f "${JOB_IDS_FILE}"
+    for archive_id in ${archive_ids}; do
+        local job_id=$(aws glacier initiate-job --account-id ${ACCOUNT} --vault-name ${VAULT} --job-parameters "{\"Type\": \"archive-retrieval\", \"ArchiveId\": \"${archive_id}\"}" | grep jobId | cut -d: -f2 | tr -d ' ",')
+        echo "${job_id}" >> "${JOB_IDS_FILE}"
+        echo "retrieval of ${archive_id} started with job id ${job_id}"
+    done
+}
+
+function cmd_get() {
+    if [ ! -f "${JOB_IDS_FILE}" ]; then
+        echo "no archive retrieval job is active"
+        exit 1
+    fi
+    local -r remaining_job_ids_file="${JOB_IDS_FILE}.remaining"
+    rm -f "${remaining_job_ids_file}"
+    while IFS= read -r job_id; do
+        local job_desc=$(aws glacier describe-job --account-id ${ACCOUNT} --vault-name ${VAULT} --job-id ${job_id} --query '[ArchiveId,StatusCode]' --output text)
+        local archive_id=$(echo "${job_desc}" | cut -f1)
+        local job_status=$(echo "${job_desc}" | cut -f2)
+        case ${job_status} in
+            InProgress)
+                echo "${job_id}: still running"
+                echo "${job_id}" >> "${remaining_job_ids_file}"
+                ;;
+            Succeeded)
+                retrieve_and_unarchive "${archive_id}" "${job_id}"
+                echo "${job_id}: completed"
+                ;;
+            *)
+                echo "${job_id}: unsupported job status: ${job_status}"
+                echo "${job_id}" >> "${remaining_job_ids_file}"
+                ;;
+        esac
+    done < "${JOB_IDS_FILE}"
+    rm -f "${JOB_IDS_FILE}"
+    if [ -f "${remaining_job_ids_file}" ]; then
+        mv "${remaining_job_ids_file}" "${JOB_IDS_FILE}"
+    fi
+}
+
+function show_usage() {
+    echo "usage: $0 <command>"
+    echo
+    echo "commands:"
+    echo "  start <archive-ids...>"
+    echo "  get"
+}
+
+if [ $# == 0 ]; then
+  show_usage
+  exit 1
+fi
+
+readonly command=$1
+shift
+
+case ${command} in
+  start)
+    cmd_start $@
+    ;;
+  get)
+    cmd_get $@
+    ;;
+  *)
+    show_usage
+    exit 1
+esac
+

@@ -56,6 +56,20 @@ either do not exist in the archive or have been updated since the last archival:
 agar status <directory>
 ~~~
 
+### Download an archive
+
+~~~
+agar down start <archive-id-1> <archive-id-2> ...
+~~~
+
+The archive ids can be found in the index file, `~/.agar/index`. If the index file is missing or incomplete then please see the next section for how to reconstruct it.
+
+To check job status and, if ready, retrieve, decrypt and unpack the archive:
+
+~~~
+agar down get
+~~~
+
 ### Retrieve index
 
 To start the job:

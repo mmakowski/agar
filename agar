@@ -20,11 +20,16 @@ function cmd_up() {
   "${LIB_DIR}/agar-up" "$@" >> "${INDEX_FILE}"
 }
 
+function cmd_down() {
+  "${LIB_DIR}/agar-down" "$@"
+}
+
 function show_usage() {
     echo "usage: $0 <command> <options>"
     echo
     echo "commands:"
     echo "  up <source-directory> <category> <password-reminder>"
+    echo "  down <archive-id>"
     echo "  status <source-directory>"
     echo "  index <sub-command>"
 }
@@ -38,6 +43,9 @@ readonly command=$1
 shift
 
 case ${command} in
+  down)
+    cmd_down "$@"
+    ;;
   index)
     cmd_index "$@"
     ;;
