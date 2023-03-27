@@ -12,12 +12,13 @@ readonly JOB_IDS_FILE="${AGAR_DIR}/down-job-ids"
 function retrieve_and_unarchive() {
     local -r archive_id=$1
     local -r job_id=$2
-    local -r password_reminder=$(grep "${archive_id}" "${INDEX_FILE}" | cut -f6)
+    local -r password_reminder=$(grep -- "${archive_id}" "${INDEX_FILE}" | cut -f6)
     local -r bz2_file="${AGAR_DIR}/${job_id}.tar.bz2"
     local -r gpg_file="${bz2_file}.gpg"
     aws glacier get-job-output --account-id ${ACCOUNT} --vault-name ${VAULT} --job-id "${job_id}" "${gpg_file}" > /dev/null
     gpg_with_password "${password_reminder}" --decrypt -o "${bz2_file}" "${gpg_file}"
     tar -xf "${bz2_file}"
+    rm "${bz2_file}" "${gpg_file}"
 }
 
 function cmd_start() {
