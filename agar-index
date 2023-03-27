@@ -10,7 +10,7 @@ readonly LIB_DIR=${SCRIPT_DIR}
 readonly JOB_ID_FILE="${AGAR_DIR}/index-job-id"
 
 function retrieve_and_setup() {
-    aws glacier get-job-output --account-id ${ACCOUNT} --vault-name ${VAULT} --job-id `cat ${JOB_ID_FILE}` ${AGAR_DIR}/index.json > /dev/null
+    aws glacier get-job-output --account-id ${ACCOUNT} --vault-name ${VAULT} --job-id=`cat ${JOB_ID_FILE}` ${AGAR_DIR}/index.json > /dev/null
     python agar_index_transform.py ${AGAR_DIR}/index.json ${AGAR_DIR}/index
     rm ${JOB_ID_FILE} ${AGAR_DIR}/index.json
 }
@@ -27,7 +27,7 @@ function cmd_get() {
         exit 1
     fi
     local -r job_id=`cat "${JOB_ID_FILE}"`
-    local -r job_status=`aws glacier describe-job --account-id ${ACCOUNT} --vault-name ${VAULT} --job-id ${job_id} --query StatusCode --output text`
+    local -r job_status=`aws glacier describe-job --account-id ${ACCOUNT} --vault-name ${VAULT} --job-id=${job_id} --query StatusCode --output text`
     case ${job_status} in
         InProgress)
             echo "the job is still running"

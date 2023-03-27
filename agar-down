@@ -15,7 +15,7 @@ function retrieve_and_unarchive() {
     local -r password_reminder=$(grep -- "${archive_id}" "${INDEX_FILE}" | cut -f6)
     local -r bz2_file="${AGAR_DIR}/${job_id}.tar.bz2"
     local -r gpg_file="${bz2_file}.gpg"
-    aws glacier get-job-output --account-id ${ACCOUNT} --vault-name ${VAULT} --job-id "${job_id}" "${gpg_file}" > /dev/null
+    aws glacier get-job-output --account-id ${ACCOUNT} --vault-name ${VAULT} --job-id="${job_id}" "${gpg_file}" > /dev/null
     gpg_with_password "${password_reminder}" --decrypt -o "${bz2_file}" "${gpg_file}"
     tar -xf "${bz2_file}"
     rm "${bz2_file}" "${gpg_file}"
@@ -39,7 +39,7 @@ function cmd_get() {
     local -r remaining_job_ids_file="${JOB_IDS_FILE}.remaining"
     rm -f "${remaining_job_ids_file}"
     while IFS= read -r job_id; do
-        local job_desc=$(aws glacier describe-job --account-id ${ACCOUNT} --vault-name ${VAULT} --job-id ${job_id} --query '[ArchiveId,StatusCode]' --output text)
+        local job_desc=$(aws glacier describe-job --account-id ${ACCOUNT} --vault-name ${VAULT} --job-id="${job_id}" --query '[ArchiveId,StatusCode]' --output text)
         local archive_id=$(echo "${job_desc}" | cut -f1)
         local job_status=$(echo "${job_desc}" | cut -f2)
         case ${job_status} in
