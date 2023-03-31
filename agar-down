@@ -23,11 +23,14 @@ function retrieve_and_unarchive() {
 
 function cmd_start() {
     local -r archive_ids="$@"
-    rm -f "${JOB_IDS_FILE}"
     for archive_id in ${archive_ids}; do
         local job_id=$(aws glacier initiate-job --account-id ${ACCOUNT} --vault-name ${VAULT} --job-parameters "{\"Type\": \"archive-retrieval\", \"ArchiveId\": \"${archive_id}\"}" | grep jobId | cut -d: -f2 | tr -d ' ",')
-        echo "${job_id}" >> "${JOB_IDS_FILE}"
-        echo "retrieval of ${archive_id} started with job id ${job_id}"
+        if [ -z "${job_id}" ]; then
+            echo "retrieval of ${archive_id} failed"
+        else
+            echo "${job_id}" >> "${JOB_IDS_FILE}"
+            echo "retrieval of ${archive_id} started with job id ${job_id}"
+        fi
     done
 }
 
